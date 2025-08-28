@@ -2,9 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 
 export default function App() {
-
-    // Counter State
-    const [count, setCount] = useState(0);
+    
     // To-Do State
     const [todos, setTodos] = useState(() => {
     try {
@@ -33,15 +31,6 @@ export default function App() {
         localStorage.setItem("todos", JSON.stringify(todos));
     }, [todos])
 
-    // Counter Handlers
-    function increment() {
-        setCount(count + 1);
-    }
-
-    function decrement() {
-        setCount(count - 1);
-    }
-
     //To-Do Handlers
     function addTodo() {
         const t = inputTodo.trim();
@@ -59,69 +48,75 @@ export default function App() {
     }
 
     return(
-        <>
-        <div className = "max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-lg text-center">
-            <h2 className="text-2xl font-bold mb-4">Weather in Istanbul</h2>
-            {weather && <p className="text-xl">🌡️ Temperature: {weather.temperature}°C</p>}
-        </div>
-        <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-lg">
-            <h2 className="text-2xl font-bold mb-4 text-center">Counter App</h2>
-            <div className = "flex items-center justify-center space-x-4">
-            <button
-                onClick = {decrement}
-                className = "px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition"
-            >
-                -
-            </button>
-            <span className="text-xl font-semibold">{count}</span>
-                <button
-                    onClick={increment}
-                    className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition"
-                >
-                    +
-                </button>
+        <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 text-white">
+        {/* Banner */}
+        <div className="w-full sticky top-0 z-10 bg-slate-800/80 backdrop-blur border-b border-white/10">
+          <div className="max-w-5xl mx-auto flex justify-between items-center px-6 py-4">
+            {/* Weather */}
+            {weather && (
+            <div className="flex items-center gap-3">
+                <span className="text-3xl">🌡️</span>
+                <div>
+                <p className="font-bold">Istanbul</p>
+                <p className="text-sm text-white/70">
+                    {weather.temperature}°C • {weather.windspeed} m/s
+                </p>
                 </div>
-        </div>
-
-        <div className = "flex flex-col justify-center space-y-8 max-w-3xl mx-auto mt-10 p-6 bg-white rounded-lg shadow-lg">
-            <h1 className = "text-3xl font-bold flex justify-center items-center mt-6">My Notes</h1>
-            <input
-            type = "text"
-            value = {inputTodo}
-            onChange = {(e) => setInputTodo(e.target.value)}
-            className = "w-full h-12 p-2 border border-gray-300 rounded mt-4" 
-            placeholder = "Write your notes here...">
-            </input>
-            <button
-                onClick={addTodo}
-                className="w-32 mx-auto px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
-            >
-                Add Note
-            </button>
-
-            <ul className = "mb-4 mt-4">
-                {todos.map((todo, index) => (
-                    <li key = {index} className="flex justify-between items-center mb-2 bg-gray-100 px-3 py-2 rounded">
-                        <span>{todo}</span>
-                        <button
-                            onClick={() => removeTodo(index)}
-                            className="px-2 py-1 bg-red-400 text-white rounded hover:bg-red-500 transition"
-                        >
-                            Delete
-                        </button>
-                    </li>
-                ))}
-            </ul>
-            {todos.length > 0 && (
-                <button
-                    onClick={clearTodos}
-                    className="w-full px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 transition"
-                >
-                    Clear All
-                </button>
+            </div>
             )}
-        </div>
 
-        </>
-    )
-}
+        {/* Countdown */}
+        <div className="flex items-center gap-2 bg-emerald-500/20 px-3 py-1 rounded-full">
+          <span className="text-xl">📝</span>
+          <span className="font-semibold">{todos.length} Notes & To-Do's</span>
+        </div>
+      </div>
+    </div>
+
+    {/* Notes */}
+    <div className="max-w-3xl mx-auto mt-10 p-6 bg-white/10 rounded-2xl shadow-xl border border-white/10">
+      <h1 className="text-2xl font-bold mb-4">My Notes</h1>
+      <div className="flex gap-3 mb-4">
+        <input
+          type="text"
+          value={inputTodo}
+          onChange={(e) => setInputTodo(e.target.value)}
+          className="flex-1 h-12 px-3 rounded-lg border border-white/20 bg-white/5 placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-emerald-400"
+          placeholder="Write your notes here..."
+        />
+        <button
+          onClick={addTodo}
+          className="px-4 h-12 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-white font-semibold"
+        >
+          Add
+        </button>
+      </div>
+
+      <ul className="space-y-2">
+        {todos.map((todo, index) => (
+          <li
+            key={index}
+            className="flex justify-between items-center px-3 py-2 rounded-lg bg-white/5 border border-white/10 hover:bg-white/20 transition"
+          >
+            <span>{todo}</span>
+            <button
+              onClick={() => removeTodo(index)}
+              className="px-2 py-1 rounded bg-rose-500 hover:bg-rose-600 text-white text-sm"
+            >
+              Delete
+            </button>
+          </li>
+        ))}
+      </ul>
+
+      {todos.length > 0 && (
+        <button
+          onClick={clearTodos}
+          className="mt-4 w-full px-4 py-2 rounded-lg bg-slate-600 hover:bg-slate-700 text-white"
+        >
+          Clear All
+        </button>
+      )}
+    </div>
+  </div>
+)}
